@@ -3,17 +3,24 @@ from django.http import HttpResponse
 
 from .models import Greeting
 
-# Create your views here.
+def filter_breakers_and_ice(request, breakers, ice=None):
+    return _filter(request=request, breakers=breakers, ice=ice)
+
+def filter_ice_and_breakers(request, ice, breakers=None):
+    return _filter(request=request, breakers=breakers, ice=ice)
+
 def index(request):
-    # return HttpResponse('Hello from Python!')
-    return render(request, "index.html")
+    return _filter(request=request)
 
+LIST_DELIM = ","
 
-def db(request):
+def _filter(request=None, breakers=None, ice=None):
+    ice_list = set(ice.split(LIST_DELIM) if ice else []) # TODO: All ICE
+    breaker_list = set(breakers.split(LIST_DELIM) if breakers else []) # TODO: All breakers
 
-    greeting = Greeting()
-    greeting.save()
+    context = {
+        'breakers': breaker_list,
+        'ice': ice_list,
+    }
 
-    greetings = Greeting.objects.all()
-
-    return render(request, "db.html", {"greetings": greetings})
+    return render(request, "break_cost_table.html", context)

@@ -15,7 +15,6 @@ import projectwotan.views
 # Learn more here: https://docs.djangoproject.com/en/2.1/topics/http/urls/
 
 urlpatterns = [
-    path("", projectwotan.views.index, name="index"),
-    path("db/", projectwotan.views.db, name="db"),
     path("admin/", admin.site.urls),
+    path("", include("projectwotan.urls")),
 ]
