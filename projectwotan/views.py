@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Greeting
-
 def filter_breakers_and_ice(request, breakers, ice=None):
     return _filter(request=request, breakers=breakers, ice=ice)
 
