@@ -46,16 +46,22 @@ def break_costs(request):
     # If request data has ice codes, key by ice, otherwise key by breakers
     # Assign break data generation function based on above result
     card_codes_param_string = request.GET.get('codes')
-    code_set = None
+    code_set = set()
 
     if card_codes_param_string:
         code_set = set(card_codes_param_string.split(LIST_DELIM))
 
-    ice_code_set = code_set or DEFAULT_ICE_CODES
-    breaker_code_set = code_set or DEFAULT_BREAKER_CODES
+    ice_list = Ice.objects.filter(code__in=code_set)
+    breaker_list = Breaker.objects.filter(code__in=code_set)
 
-    ice_list = Ice.objects.filter(code__in=ice_code_set)
-    breaker_list = Breaker.objects.filter(code__in=breaker_code_set)
+    # If there were no ice or no breakers in provided code set, 
+    # use a default set for the empty list
+
+    if not ice_list or ice_list.count() < 1:
+        ice_list = Ice.objects.filter(code__in=DEFAULT_ICE_CODES)
+
+    if not breaker_list or breaker_list.count() < 1:
+        breaker_list = Breaker.objects.filter(code__in=DEFAULT_BREAKER_CODES)
 
     break_data = {}
 
@@ -68,3 +74,53 @@ def break_costs(request):
         break_data[breaker.code] = break_data_for_breaker
 
     return JsonResponse(break_data)
+
+
+def default_cards(request):
+    ice_list = Ice.objects.filter(code__in=DEFAULT_ICE_CODES)
+    breaker_list = Breaker.objects.filter(code__in=DEFAULT_BREAKER_CODES)
+
+    card_data = {}
+    for card in (list(ice_list) + list(breaker_list)):
+        card_data[card.code] = card.as_json()
+
+    return JsonResponse(card_data)
+
+def card_search(request):
+    query_str = request.GET.get('q')
+    if not query_str:
+        return JsonResponse({
+            "error": "'name' is a required query param"
+        })
+
+    ice_list = Ice.objects.filter(name__contains=query_str)
+    ice_count = ice_list.count()
+    if ice_count == 1:
+        return JsonResponse(ice_list.first().as_json())
+
+    breaker_list = Breaker.objects.filter(name__contains=query_str)
+    if breaker_list.count() == 1:
+        return JsonResponse(breaker_list.first().as_json())
+
+    total_results = ice_count + breaker_count
+    error_msg = "No card found for query: %s"
+    if total_results > 1: 
+        error_msg = "More than 1 card found for query: %s"
+
+    return JsonResponse({
+        "error": error_msg % query_str
+    })
+
+
+def card_by_code(request, code):
+    ice = Ice.objects.filter(code=code)
+    if ice.count() == 1:
+        return JsonResponse(ice.first())
+
+    breaker = Breaker.objects.filter(code=code)
+    if breaker.count() == 1:
+        return JsonResponse(breaker.first())
+
+    return JsonResponse({
+        "error": "No breaker or ice found with code %s" % code
+    })

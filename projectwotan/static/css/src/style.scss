@@ -2,3 +2,64 @@ html {
     padding: 0;
     margin: 0;
 }
+
+.break-table {
+    display: flex;
+    flex-direction: column;
+
+    &__row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__cell {
+        $cell-dimention: 100px;
+
+        flex: 1 0 #{$cell-dimention};
+        height: $cell-dimention; 
+        text-align: right;
+    }
+}
+
+.card {
+    &__image {
+        width: 100px;
+        overflow: hidden;
+        height: 100px;
+        position: relative;
+
+        img {
+            position: absolute;
+        }
+    }
+
+    &.ice {
+        img {
+            width: 160%;
+            transform: rotateZ(90deg);
+            transform-origin: top;
+            left: 140%;
+            top: 50%;
+        }
+    }
+
+    &.breaker {
+        display: flex;
+        flex-direction: row-reverse;
+        width: 200px;
+
+        img {
+            width: 174%;
+            left: -43%;
+            top: -28%;
+        }
+
+        &.old-layout {
+            img {
+                width: 197%;
+                left: -70%;
+                top: -12%;
+            }
+        }
+    }
+}

@@ -17,6 +17,8 @@ from . import views, api
 urlpatterns = [
     # API Endpoints
     path("api/break-costs/", api.break_costs),
+    path("api/cards/search/", api.card_search),
+    path("api/cards/default/", api.default_cards),
 
     # Views
     path("", views.index),

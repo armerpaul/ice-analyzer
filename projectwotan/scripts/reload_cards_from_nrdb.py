@@ -8,9 +8,8 @@ from projectwotan.models import (
 
 OUTPUT_FILE_NAME = 'break-costs.json'
 
-RELOAD_FROM_NRDB = False
-RECALCULATE_DATA = True
-VERBOSE = True
+RELOAD_FROM_NRDB = True
+VERBOSE = False
 OUTPUT_BREAKERS = False
 OUTPUT_ICE = False
 
@@ -43,7 +42,14 @@ if RELOAD_FROM_NRDB:
                 code,
             ))
 
-    for card_data in data["data"]:        
+    deduped_card_data = {}
+    for card_data in data["data"]:  
+        name = card_data["title"]
+
+        if name not in deduped_card_data or card_data["code"] > deduped_card_data[name]["code"]:
+            deduped_card_data[name] = card_data
+
+    for name, card_data in deduped_card_data.items():  
         try:
             if is_valid_ice(card_data):
                 ice, created = Ice.objects.get_or_create(code=card_data["code"])
@@ -62,28 +68,6 @@ if RELOAD_FROM_NRDB:
         except Exception:
             print("Error processing card [%s]" % card_data["code"])
             print(card_data)
-
-
-
-# Calculate
-if RECALCULATE_DATA:
-
-    all_breakers = Breaker.objects.all()
-    all_ice = Ice.objects.all()
-
-    break_data = {}
-
-    for breaker in all_breakers:
-        break_data_for_breaker = {}
-
-        for ice in all_ice:
-            break_data_for_breaker[ice.name] = breaker.cost_to_break(ice)
-
-        break_data[breaker.name] = break_data_for_breaker
-        
-    with open(OUTPUT_FILE_NAME, 'w') as output_file:
-        output_file.truncate(0)
-        output_file.write(json.dumps(break_data))
 
 # Test
 if OUTPUT_BREAKERS:

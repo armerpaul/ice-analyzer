@@ -1,13 +1,31 @@
 var STATUS_LOADING = 'loading';
+var MIN_QUERY_LENGTH = 3;
+
+Vue.component('table-card', {
+    props: ['card'],
+    data: function(){
+        return {
+            'OLD_LAYOUT_CLS': 'old-layout'
+        }
+    },
+    template: 
+        '<div class="card" v-bind:class="[card.type, card.isNisei ? null : OLD_LAYOUT_CLS]" v-if="card">' + 
+            '<div class="card__image"><img v-bind:src="card.image" /></div>' +
+            '<span class="card__name">{{ card.name }}</span>' +
+        '</div>',
+})
 
 var app = new Vue({
+    delimiters: ['[[', ']]'],
     el: '#break-cost-table',
     data: {
-      breakData: {},
-      filters: {},
-      cards: {
-          
-      }
+        query: '',
+        searchError: '',
+        breakData: {},
+        iceCodes: [],
+        filters: {},
+        cardsForTable: {},
+        cards: {},
     },
     methods: {
         errorMessage: function(message) {
@@ -15,30 +33,61 @@ var app = new Vue({
         },
         updateBreakCosts: function() {
             var self = this;
-            // I think people will often be search for specific breakers vs common ice 
-            // or specific ice vs common breakers.
-            // So maybe do /breakers|ice/list,of,card,codes/ and have it return a list 
-            // of break costs sorted into lists of breakers|ice
-            var params = {};
-            var codes = Object.keys(self.cards);
+
+            var codes = _.keys(self.cardsForTable);
+            var requestPromise = null;
 
             if (codes.length) {
-                params.codes = codes;
+                var params = {
+                    'codes': codes
+                };
+
+                requestPromise = http.get('/api/break-costs/', params)
+            }
+            else {
+                requestPromise = http.get('/api/break-costs/');
             }
 
-            http.get('/api/break-costs/', params).then(function(data) {
+            requestPromise.then(function(data) {
+                self.iceCodes = _.keys(_.sample(data))
                 self.breakData = data;
             });
         },
-        addCardByCode: function(cardCode){
-            this.cards[code] = STATUS_LOADING;
-            // Start loading card data
+        searchForCardWithQuery: function(){
+            var self = this;
+
+            // TODO: Search cache first
+
+            self.searchError = "";
+
+            http.get('/api/cards/search/', { q: self.query }).then(function(card) {
+                if (card) {
+                    self.cards[card.code] = card;
+                    self.cardsForTable[card.code] = self.cards[card.code];
+
+                    self.query = "";
+                    self.updateBreakCosts();    
+                }
+                else {
+                    // ERROR
+                    self.searchError = "There are no ice or breakers matching that query."
+                }
+            });
         },
-        removeCardByCode: function(cardCode){
-            delete this.cards[code];
+        removeCardByCode: function(code){
+            var self = this;
+
+            delete self.cardsForTable[code];
+            self.updateBreakCosts();
         },
     },
     created: function() {
-        this.updateBreakCosts();
+        var self = this;
+
+        self.updateBreakCosts();
+        http.get('/api/cards/default/').then(function(cards) {
+            self.cards = cards;
+            self.cardsForTable = self.cards;
+        });
     } 
 });

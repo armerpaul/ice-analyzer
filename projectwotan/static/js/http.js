@@ -17,7 +17,7 @@ window.http = window.http || {
 
         return fetch(url).then(function(response){
             if (response.ok) {
-                return response.data;
+                return response.json();
             }
 
             throw "Error getting resource at " + url;

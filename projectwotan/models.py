@@ -3,8 +3,12 @@ import re
 import math
 
 class Card(models.Model):
-    IMG_URL_TEMPLATE = "https://netrunnerdb.com/card_image/{code}.png"
+    DEFAULT_IMG_URL_TEMPLATE = "https://netrunnerdb.com/card_image/%s.png"
     VARIABLE_STRENGTH = -1
+
+    NISEI_PACKS = (
+        'df'
+    )
 
     keywords = models.TextField()
     name = models.CharField(max_length=128)
@@ -12,6 +16,8 @@ class Card(models.Model):
     code = models.CharField(max_length=5)
     cost = models.IntegerField(default=0)
     strength = models.IntegerField(default=VARIABLE_STRENGTH)
+    image = models.TextField(default="")
+    is_nisei = models.BooleanField(default=False)
 
     def extend(self, data):
         self.keywords = data["keywords"]
@@ -20,9 +26,24 @@ class Card(models.Model):
         self.code = data["code"]
         self.cost = int(data["cost"])
         self.strength = self.VARIABLE_STRENGTH
+        self.image = data.get("image_url", self.default_img_url)
+        self.is_nisei = data["pack_code"] in self.NISEI_PACKS
 
         if "strength" in data and data["strength"]:
             self.strength = int(data["strength"])
+
+    def as_json(self):
+       return {
+           "name": self.name,
+           "code": self.code,
+           "text": self.text,
+           "cost": self.cost,
+           "strength": self.strength,
+           "subtypes": self.subtypes,
+           "image": self.image,
+           "type": self.__class__.__name__.lower(),
+           "isNisei": self.is_nisei
+       }
 
     @property
     def is_strength_variable(self):
@@ -33,8 +54,8 @@ class Card(models.Model):
         return self.keywords.lower().split(" - ")
 
     @property
-    def img_url(self):
-        return self.IMG_URL_TEMPLATE % self.code
+    def default_img_url(self):
+        return self.DEFAULT_IMG_URL_TEMPLATE % self.code
 
     class Meta:
         abstract = True

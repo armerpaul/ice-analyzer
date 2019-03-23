@@ -8,9 +8,37 @@
 
 {% block content %}
   <div id="break-cost-table">
-    <div v-for="breakCostList in breakData">
-      <div v-for="breakCost in breakCostList">
+    <form class="" v-on:submit.prevent="searchForCardWithQuery">
+        <input v-model="query" />
+        <button type="submit">Search</button>
 
+        <div>[[ searchError ]]</div>
+    </form>
+
+    <div class="break-table">
+      <div class="break-table__row">
+        <div class="break-table__cell --header --spacer"></div>
+        <div class="break-table__cell --header"
+          v-for="iceCode in iceCodes"
+        >
+          <table-card v-bind:card="cards[iceCode]"></table-card>
+        </div>
+      </div>
+      <div class="break-table__row"
+        v-for="(breakCostList, breakerCode) in breakData" 
+      >
+        <div class="break-table__cell --header">
+          <table-card v-bind:card="cards[breakerCode]"></table-card>
+        </div>
+        <div class="break-table__cell"
+          v-for="(breakCost, iceCode) in breakCostList"
+        >
+          <span class="format-credit"
+            v-if="breakCost > -1"
+          >
+            [[ breakCost ]]
+          </span>
+        </div>
       </div>
     </div>
   </div>
