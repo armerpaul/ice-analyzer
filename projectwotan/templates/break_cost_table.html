@@ -1,23 +1,17 @@
 {% extends "base/_.html" %}
 {% load staticfiles %}
 
+{% block js %}
+  <script src='{% static "js/http.js" %}'></script>
+  <script src='{% static "js/break-cost-table.js" %}'></script>
+{% endblock %}
+
 {% block content %}
-<div class="container">
+  <div id="break-cost-table">
+    <div v-for="breakCostList in breakData">
+      <div v-for="breakCost in breakCostList">
 
-  <h3>Breakers</h3>
-  <ul>
-  {% for breaker in breakers %}
-      <li>{{ breaker }}</li>
-  {% endfor %}
-  </ul>
-
-  <h3>ICE</h3>
-  <ul>
-  {% for ice_piece in ice %}
-      <li>{{ ice_piece }}</li>
-  {% endfor %}
-  </ul>
-
-</div>
-
+      </div>
+    </div>
+  </div>
 {% endblock %}

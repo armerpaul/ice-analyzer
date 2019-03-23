@@ -4,7 +4,7 @@ from django.contrib import admin
 
 admin.autodiscover()
 
-from . import views
+from . import views, api
 
 # To add a new path, first import the app:
 # import blog
@@ -15,9 +15,10 @@ from . import views
 # Learn more here: https://docs.djangoproject.com/en/2.1/topics/http/urls/
 
 urlpatterns = [
-    path("breakers/<str:breakers>/", views.filter_breakers_and_ice),
-    path("breakers/<str:breakers>/ice/<str:ice>/", views.filter_breakers_and_ice),
-    path("ice/<str:ice>/", views.filter_ice_and_breakers),
-    path("ice/<str:ice>/breakers/<str:breakers>/", views.filter_ice_and_breakers),
+    # API Endpoints
+    path("api/break-costs/", api.break_costs),
+
+    # Views
     path("", views.index),
+    path("about/", views.about),
 ]
