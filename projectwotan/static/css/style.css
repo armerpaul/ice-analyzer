@@ -2,34 +2,271 @@ html {
   padding: 0;
   margin: 0; }
 
-.break-table {
+body {
+  margin: 0;
+  padding: 0; }
+
+*, ::after, ::before {
+  box-sizing: border-box; }
+
+a {
+  text-decoration: none; }
+
+@font-face {
+  font-family: 'netrunner';
+  src: url("../fonts/netrunner.eot?cmdd12");
+  src: url("../fonts/netrunner.eot?cmdd12#iefix") format("embedded-opentype"), url("../fonts/netrunner.ttf?cmdd12") format("truetype"), url("../fonts/netrunner.woff?cmdd12") format("woff"), url("../fonts/netrunner.svg?cmdd12#netrunner") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+.icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'netrunner' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-abr:before {
+  content: "\e920"; }
+
+.icon-subroutine:before {
+  content: "\e900"; }
+
+.icon-mu3:before {
+  content: "\e901"; }
+
+.icon-mu2:before {
+  content: "\e902"; }
+
+.icon-mu1:before {
+  content: "\e903"; }
+
+.icon-mu:before {
+  content: "\e904"; }
+
+.icon-trash:before {
+  content: "\e905"; }
+
+.icon-link-half-top:before {
+  content: "\e906"; }
+
+.icon-link-half-bottom:before {
+  content: "\e907"; }
+
+.icon-link:before {
+  content: "\e908"; }
+
+.icon-click:before {
+  content: "\e909"; }
+
+.icon-recurring-credit:before {
+  content: "\e90a"; }
+
+.icon-credit:before {
+  content: "\e90b"; }
+
+.icon-core:before {
+  content: "\e914"; }
+
+.icon-genesis:before {
+  content: "\e911"; }
+
+.icon-creation-and-control:before {
+  content: "\e913"; }
+
+.icon-spin:before {
+  content: "\e90c"; }
+
+.icon-honor-and-profit:before {
+  content: "\e910"; }
+
+.icon-lunar:before {
+  content: "\e90f"; }
+
+.icon-order-and-chaos:before {
+  content: "\e90e"; }
+
+.icon-sansan:before {
+  content: "\e90d"; }
+
+.icon-data-and-destiny:before {
+  content: "\e912"; }
+
+.icon-mumbad:before {
+  content: "\e91f"; }
+
+.icon-flashpoint:before {
+  content: "\e921"; }
+
+.icon-red-sand:before {
+  content: "\e922"; }
+
+.icon-terminal-directive:before {
+  content: "\e923"; }
+
+.icon-core2:before {
+  content: "\e924"; }
+
+.icon-kitara:before {
+  content: "\e925"; }
+
+.icon-reign-and-reverie:before {
+  content: "\e926"; }
+
+.icon-magnum-opus:before {
+  content: "\e927"; }
+
+.icon-sc19:before {
+  content: "\e928"; }
+
+.icon-ashes:before {
+  content: "\e929"; }
+
+.icon-anarch:before {
+  content: "\e91a"; }
+
+.icon-criminal:before {
+  content: "\e919"; }
+
+.icon-shaper:before {
+  content: "\e91b"; }
+
+.icon-jinteki:before {
+  content: "\e916"; }
+
+.icon-haas-bioroid:before {
+  content: "\e918"; }
+
+.icon-nbn:before {
+  content: "\e915"; }
+
+.icon-weyland-consortium:before {
+  content: "\e917"; }
+
+.icon-adam:before {
+  content: "\e91d"; }
+
+.icon-apex:before {
+  content: "\e91e"; }
+
+.icon-sunny-lebeau:before {
+  content: "\e91c"; }
+
+body {
+  background: #2b243a;
+  color: #ffffff; }
+
+.nav {
+  width: 100%;
   display: flex;
-  flex-direction: column; }
+  flex-direction: row;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.5);
+  align-items: stretch; }
+  .nav__logo {
+    background: #b12312;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1em;
+    color: #ffffff; }
+    .nav__logo__image {
+      font-size: 1.5em;
+      color: #5e2ebb; }
+    .nav__logo__text {
+      margin-left: 0.5em; }
+  .nav__group {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  .nav__link {
+    padding: 1em 1.5em;
+    display: block;
+    background: rgba(255, 255, 255, 0.25);
+    color: #5e2ebb;
+    transition: background 180ms; }
+    .nav__link:hover {
+      background: rgba(56, 34, 99, 0.25); }
+
+.break-table {
+  width: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  position: relative; }
   .break-table__row {
     display: flex;
-    flex-direction: row; }
+    flex-direction: row;
+    padding-left: 1em;
+    width: 0; }
   .break-table__cell {
-    flex: 1 0 100px;
-    height: 100px;
-    text-align: right; }
+    background: rgba(255, 255, 255, 0.15);
+    flex: 1 0 80px;
+    height: 80px;
+    text-align: right;
+    margin-right: 0.3em;
+    margin-bottom: 0.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .break-table__cell:before, .break-table__cell:after {
+      opacity: 0;
+      content: '';
+      background: rgba(255, 255, 255, 0.1);
+      position: absolute;
+      z-index: -1;
+      transition: opacity 180ms; }
+    .break-table__cell:before {
+      height: 80px;
+      width: calc(100% - 220px);
+      left: 220px; }
+    .break-table__cell:after {
+      width: 80px;
+      height: calc(100% - 220px);
+      top: 220px; }
+    .break-table__cell.--header {
+      flex-direction: row;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      background: transparent; }
+      .break-table__cell.--header:first-child {
+        flex: 1 0 220px; }
+      .break-table__cell.--header:not(:first-child) {
+        height: 220px; }
+    .break-table__cell:hover:not(.--header):before, .break-table__cell:hover:not(.--header):after {
+      opacity: 1; }
 
-.card__image {
-  width: 100px;
-  overflow: hidden;
-  height: 100px;
-  position: relative; }
-  .card__image img {
-    position: absolute; }
-.card.ice img {
-  width: 160%;
-  transform: rotateZ(90deg);
-  transform-origin: top;
-  left: 140%;
-  top: 50%; }
-.card.breaker {
-  display: flex;
-  flex-direction: row-reverse;
-  width: 200px; }
+.card {
+  position: relative;
+  display: inline-block; }
+  .card__image {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(255, 255, 255, 0.4); }
+    .card__image img {
+      position: absolute; }
+  .card__name {
+    position: absolute;
+    width: 140px;
+    transform: rotate(-15deg);
+    right: 120%;
+    top: 60%; }
+  .card.ice {
+    transform: rotateZ(90deg); }
+    .card.ice img {
+      width: 150%;
+      left: -30%;
+      top: -110%; }
   .card.breaker img {
     width: 174%;
     left: -43%;
@@ -38,5 +275,13 @@ html {
     width: 197%;
     left: -70%;
     top: -12%; }
+
+.card-form {
+  width: 100vw;
+  background: #ffffff;
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; }
 
 /*# sourceMappingURL=style.css.map */

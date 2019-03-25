@@ -1,0 +1,137 @@
+$cell-dimention: 80px;
+$header-dimention: 220px;
+$side-padding: 1em;
+
+.break-table {
+    width: 100%;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    
+    &__row {
+        display: flex;
+        flex-direction: row;
+        padding-left: $side-padding;
+        width: 0;
+    }
+
+    &__cell {
+        $cell-spacing: 0.3em;
+
+        background: rgba($color-white, 0.15);
+        flex: 1 0 #{$cell-dimention};
+        height: $cell-dimention;
+        text-align: right;
+        margin-right: $cell-spacing;
+        margin-bottom: $cell-spacing;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:before, &:after {
+            opacity: 0;
+            content: '';
+            background: rgba($color-white, 0.1);
+            position: absolute;
+            z-index: -1;
+            transition: opacity $hover-time;
+        }
+
+        &:before {
+            height: $cell-dimention;
+            width: calc(100% - #{$header-dimention});
+            left: $header-dimention;
+        }
+
+        &:after {
+            width: $cell-dimention;
+            height: calc(100% - #{$header-dimention});
+            top: $header-dimention;
+        }
+
+        &.--header {
+            flex-direction: row;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            background: transparent;
+
+            &:first-child {
+                flex: 1 0 #{$header-dimention};
+            }
+
+            &:not(:first-child) {
+                height: $header-dimention;
+            }
+        }
+
+        &:hover:not(.--header) {
+            &:before, &:after {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.card {
+    $c: &;
+
+    position: relative;
+    display: inline-block;
+
+    &__image {
+        width: $cell-dimention;
+        height: $cell-dimention;
+        overflow: hidden;
+        position: relative;
+        background: rgba($color-white, 0.4);
+
+        img {
+            position: absolute;
+        }
+    }
+
+    &__name {
+        position: absolute;
+        width: $header-dimention - $cell-dimention;
+        transform: rotate(-15deg);
+        right: 120%;
+        top: 60%; 
+    }
+
+    &.ice {
+        transform: rotateZ(90deg);
+
+        img {
+            width: 150%;
+            left: -30%;
+            top: -110%;
+        }
+    }
+
+    &.breaker {
+        img {
+            width: 174%;
+            left: -43%;
+            top: -28%;
+        }
+
+        &.old-layout {
+            img {
+                width: 197%;
+                left: -70%;
+                top: -12%;
+            }
+        }
+    }
+}
+
+.card-form {
+    width: 100vw;
+    background: $color-white;
+    padding: $side-padding;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}

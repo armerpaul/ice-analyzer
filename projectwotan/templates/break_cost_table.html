@@ -8,7 +8,7 @@
 
 {% block content %}
   <div id="break-cost-table">
-    <form class="" v-on:submit.prevent="searchForCardWithQuery">
+    <form class="card-form" v-on:submit.prevent="searchForCardWithQuery">
         <input v-model="query" />
         <button type="submit">Search</button>
 
@@ -36,7 +36,7 @@
           <span class="format-credit"
             v-if="breakCost > -1"
           >
-            [[ breakCost ]]
+            [[ breakCost ]]<span class="icon icon-credit"></span>
           </span>
         </div>
       </div>
