@@ -166,30 +166,55 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.5);
-  align-items: stretch; }
+  align-items: start; }
   .nav__logo {
-    background: #b12312;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1em;
-    color: #ffffff; }
-    .nav__logo__image {
-      font-size: 1.5em;
-      color: #5e2ebb; }
-    .nav__logo__text {
-      margin-left: 0.5em; }
-  .nav__group {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    color: #ffffff;
+    position: relative;
+    flex: 0 0;
+    height: 4em; }
+    .nav__logo__image {
+      display: block;
+      height: 100%;
+      position: relative;
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+      background: #b12312;
+      padding-left: 0.75em;
+      padding-right: 1.075em; }
+      .nav__logo__image:before, .nav__logo__image:after {
+        content: '';
+        transform: skew(-15deg);
+        width: 0.65em;
+        height: 100%;
+        display: block;
+        position: absolute;
+        top: 0; }
+      .nav__logo__image:before {
+        right: -0.325em;
+        background: #5e2ebb; }
+      .nav__logo__image:after {
+        right: -0.975em;
+        background: #382263; }
+    .nav__logo__text {
+      display: none; }
+  .nav__group {
+    display: flex;
+    flex: 1 0;
+    flex-direction: row;
+    justify-content: flex-end;
+    background: rgba(255, 255, 255, 0.5);
     list-style: none;
     padding: 0;
     margin: 0; }
   .nav__link {
-    padding: 1em 1.5em;
+    padding: .75em;
     display: block;
-    background: rgba(255, 255, 255, 0.25);
     color: #5e2ebb;
     transition: background 180ms; }
     .nav__link:hover {
@@ -231,6 +256,8 @@ body {
       width: 80px;
       height: calc(100% - 220px);
       top: 220px; }
+    .break-table__cell.--form {
+      height: 220px; }
     .break-table__cell.--header {
       flex-direction: row;
       display: flex;
@@ -247,6 +274,22 @@ body {
 .card {
   position: relative;
   display: inline-block; }
+  .card__remove {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    font-size: 1.25em;
+    background: rgba(43, 36, 58, 0.8);
+    padding: 0.4em;
+    line-height: 0.5;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 180ms; }
+    .card:hover .card__remove {
+      opacity: 0.75; }
+    .card:hover .card__remove:hover {
+      opacity: 1; }
   .card__image {
     width: 80px;
     height: 80px;
@@ -277,8 +320,6 @@ body {
     top: -12%; }
 
 .card-form {
-  width: 100vw;
-  background: #ffffff;
   padding: 1em;
   display: flex;
   flex-direction: row;

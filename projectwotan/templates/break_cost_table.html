@@ -7,28 +7,45 @@
 {% endblock %}
 
 {% block content %}
+
+  <script id="wtn-card" type="text/html">
+    <div class="card" v-bind:class="[card.type, card.isNisei ? null : 'old-layout']" v-if="card">
+      <a class="card__remove" v-on:click="remove(card)">&times;</a>
+      <div class="card__image"><img v-bind:src="card.image" /></div>
+      <span class="card__name">[[ card.name ]]</span>
+    </div>
+  </script>
+
   <div id="break-cost-table">
-    <form class="card-form" v-on:submit.prevent="searchForCardWithQuery">
-        <input v-model="query" />
-        <button type="submit">Search</button>
-
-        <div>[[ searchError ]]</div>
-    </form>
-
     <div class="break-table">
       <div class="break-table__row">
-        <div class="break-table__cell --header --spacer"></div>
+        <div class="break-table__cell --header --form">
+          <form class="card-form" 
+            v-on:submit.prevent="searchForCardWithQuery"
+          >
+              <input v-model="query" />
+              <button type="submit">Add</button>
+      
+              <div>[[ searchError ]]</div>
+          </form>
+        </div>
         <div class="break-table__cell --header"
           v-for="iceCode in iceCodes"
         >
-          <table-card v-bind:card="cards[iceCode]"></table-card>
+          <wtn-card 
+            v-bind:card="cards[iceCode]" 
+            v-bind:remove="removeCard">
+          </wtn-card>
         </div>
       </div>
       <div class="break-table__row"
         v-for="(breakCostList, breakerCode) in breakData" 
       >
         <div class="break-table__cell --header">
-          <table-card v-bind:card="cards[breakerCode]"></table-card>
+          <wtn-card 
+            v-bind:card="cards[breakerCode]"
+            v-bind:remove="removeCard">
+          </wtn-card>
         </div>
         <div class="break-table__cell"
           v-for="(breakCost, iceCode) in breakCostList"

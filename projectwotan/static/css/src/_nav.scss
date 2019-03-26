@@ -3,39 +3,74 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background: rgba($color-white, 0.5);
-    align-items: stretch;
+    align-items: start;
 
     &__logo {
-        background: $color-red;
+        $slant-width: .65em;
+
         display: flex;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 0 1em;
+        padding: 0;
         color: $color-white;
+        position: relative;
+        flex: 0 0;
+        height: 4em;
 
         &__image {
+            $side-padding: .75em;
+
+            display: block;
+            height: 100%;
+            position: relative;
             font-size: 1.5em;
-            color: $color-purple-bright;
+            display: flex;
+            align-items: center;
+            background: $color-red;
+            padding-left: $side-padding;
+            padding-right: $side-padding + ($slant-width * .5);
+
+            &:before, &:after {
+                content: '';
+                transform: skew(-15deg);
+                width: $slant-width;
+                height: 100%;
+                display: block;
+                position: absolute;
+                top: 0;
+            }
+    
+            &:before {
+                right: -($slant-width / 2);
+                background: $color-purple-bright;
+            }
+    
+            &:after {
+                right: -($slant-width * 1.5);
+                background: $color-purple;
+            }
         }
 
         &__text {
-            margin-left: 0.5em;
+            display: none;
         }
     }
 
     &__group {
         display: flex;
+        flex: 1 0;
         flex-direction: row;
+        justify-content: flex-end;
+        background: rgba($color-white, 0.5);
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
     &__link {
-        padding: 1em 1.5em;
+        padding: .75em;
         display: block;
-        background: rgba($color-white, 0.25);
         color: $color-purple-bright;
         transition: background $hover-time;
 

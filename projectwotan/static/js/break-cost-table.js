@@ -1,22 +1,11 @@
 var STATUS_LOADING = 'loading';
 var MIN_QUERY_LENGTH = 3;
 
-Vue.component('table-card', {
-    props: ['card'],
-    data: function(){
-        return {
-            'OLD_LAYOUT_CLS': 'old-layout'
-        }
-    },
-    template: 
-        '<div class="card" v-bind:class="[card.type, card.isNisei ? null : OLD_LAYOUT_CLS]" v-if="card">' + 
-            '<div class="card__image"><img v-bind:src="card.image" /></div>' +
-            '<span class="card__name">{{ card.name }}</span>' +
-        '</div>',
+VueComponent('wtn-card', {
+    props: ['card', 'remove'],
 })
 
-var app = new Vue({
-    delimiters: ['[[', ']]'],
+var app = VueApp({
     el: '#break-cost-table',
     data: {
         query: '',
@@ -74,10 +63,10 @@ var app = new Vue({
                 }
             });
         },
-        removeCardByCode: function(code){
+        removeCard: function(card){
             var self = this;
 
-            delete self.cardsForTable[code];
+            delete self.cardsForTable[card.code];
             self.updateBreakCosts();
         },
     },

@@ -50,6 +50,10 @@ $side-padding: 1em;
             top: $header-dimention;
         }
 
+        &.--form {
+            height: $header-dimention;
+        }
+
         &.--header {
             flex-direction: row;
             display: flex;
@@ -79,6 +83,28 @@ $side-padding: 1em;
 
     position: relative;
     display: inline-block;
+
+    &__remove {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+        font-size: 1.25em;
+        background: rgba($color-purple-dim, 0.8);
+        padding: 0.4em;
+        line-height: 0.5;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity $hover-time;
+
+        #{$c}:hover & {
+            opacity: 0.75;
+        }
+
+        #{$c}:hover &:hover {
+            opacity: 1;
+        }
+    }
 
     &__image {
         width: $cell-dimention;
@@ -128,8 +154,6 @@ $side-padding: 1em;
 }
 
 .card-form {
-    width: 100vw;
-    background: $color-white;
     padding: $side-padding;
     display: flex;
     flex-direction: row;
