@@ -8,11 +8,35 @@
 
 {% block content %}
 
-  <script id="wtn-card" type="text/html">
-    <div class="card" v-bind:class="[card.type, card.isNisei ? null : 'old-layout']" v-if="card">
-      <a class="card__remove" v-on:click="remove(card)">&times;</a>
+  <svg height="0" width="0" viewBox="0 0 100 100">
+    <defs>
+      <mask id="target-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+        <circle cx="0" cy="0" r=".35" fill="white" />
+      </mask>
+      <symbol id="eighth-of-circle">
+        <path d="
+          M100 100
+          L29.29 100
+          C29.29 100 29.29 70.71 50 50
+          z
+        "></path>
+      </symbol>
+    </defs>
+  </svg>
+
+  <script id="ia-card" type="text/html">
+    <div class="card" v-bind:class="cssClasses" v-if="card">
+      
       <div class="card__image"><img v-bind:src="card.image" /></div>
-      <span class="card__name">[[ card.name ]]</span>
+      <div class="card__info">
+          <div class="card__name">[[ card.name ]]</div>
+          <span v-for="stat in stats"
+            v-bind:class="stat.cssClass" 
+          >
+            [[ stat.value ]]
+          </span>
+      </div>
+      <a class="card__remove" v-on:click="remove(card)">&times;</a>
     </div>
   </script>
 
@@ -30,25 +54,39 @@
           </form>
         </div>
         <div class="break-table__cell --header"
-          v-for="iceCode in iceCodes"
+          v-for="(iceCode, index) in iceCodes"
+          v-on:mouseover="setHover(iceCode, null)"
+          v-bind:class="cellCssClasses(iceCode, 0)"
+          v-on:click="toggleHoverFreeze()"
         >
-          <wtn-card 
+          <svg class="break-table__cell__arc-container" viewBox="0 0 100 100">
+            <use class="break-table__cell__arc" xlink:href="#eighth-of-circle"/>
+          </svg>
+          <ia-card 
             v-bind:card="cards[iceCode]" 
-            v-bind:remove="removeCard">
-          </wtn-card>
+            v-bind:index="index"
+            v-bind:remove="removeCard"
+          ></ia-card>
         </div>
       </div>
       <div class="break-table__row"
         v-for="(breakCostList, breakerCode) in breakData" 
       >
-        <div class="break-table__cell --header">
-          <wtn-card 
+        <div class="break-table__cell --header"
+          v-on:mouseover="setHover(null, breakerCode)"
+          v-on:click="toggleHoverFreeze()"
+          v-bind:class="cellCssClasses(0, breakerCode)"
+        >
+          <ia-card 
             v-bind:card="cards[breakerCode]"
             v-bind:remove="removeCard">
-          </wtn-card>
+          </ia-card>
         </div>
         <div class="break-table__cell"
           v-for="(breakCost, iceCode) in breakCostList"
+          v-on:mouseover="setHover(iceCode, breakerCode)"
+          v-on:click="toggleHoverFreeze()"
+          v-bind:class="cellCssClasses(iceCode, breakerCode)"
         >
           <span class="format-credit"
             v-if="breakCost > -1"

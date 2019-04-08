@@ -65,13 +65,13 @@ def break_costs(request):
 
     break_data = {}
 
-    for breaker in breaker_list:
-        break_data_for_breaker = {}
+    for ice in ice_list:
+        break_data_for_ice = {}
 
-        for ice in ice_list:
-            break_data_for_breaker[ice.code] = breaker.cost_to_break(ice)
+        for breaker in breaker_list:
+            break_data_for_ice[breaker.code] = breaker.cost_to_break(ice)
 
-        break_data[breaker.code] = break_data_for_breaker
+        break_data[ice.code] = break_data_for_ice
 
     return JsonResponse(break_data)
 

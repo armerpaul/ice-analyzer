@@ -1,8 +1,38 @@
 var STATUS_LOADING = 'loading';
 var MIN_QUERY_LENGTH = 3;
 
-VueComponent('wtn-card', {
-    props: ['card', 'remove'],
+VueComponent('ia-card', {
+    props: ['card', 'index', 'remove'],
+    computed: {
+        cssClasses: function() {
+            var cssClasses = [ this.card.type ];
+
+            // Class for original layout
+            if (!this.card.isNisei) {
+                cssClasses.push('--old-layout');            
+            }
+
+            return cssClasses;
+        },
+        stats: function() {
+            var stats = [];
+            var addStat = function(cssClass, value) {
+                stats.push({
+                    'cssClass': cssClass,
+                    'value': value
+                });
+            }
+
+            addStat('--strength', this.card.strength);
+
+            if ('ice' === this.card.type) {
+                addStat('icon icon-subroutine', this.card.subroutines.length);
+    
+            }
+
+            return stats;
+        }
+    }
 })
 
 var app = VueApp({
@@ -15,10 +45,36 @@ var app = VueApp({
         filters: {},
         cardsForTable: {},
         cards: {},
+        isHoverFrozen: false,
+        hover: {
+            ice: -1,
+            breaker: -1
+        }
     },
     methods: {
         errorMessage: function(message) {
             console.error(message);
+        },
+        toggleHoverFreeze: function() {
+            this.isHoverFrozen = !this.isHoverFrozen;
+        },
+        setHover: function(iceCode, breakerCode) {
+            if (!this.isHoverFrozen) {
+                this.hover.ice = iceCode;
+                this.hover.breaker = breakerCode;    
+            }
+        },
+        cellCssClasses: function(iceCode, breakerCode) {
+            var matchesRow = breakerCode && this.hover.breaker === breakerCode;
+            var matchesCol = iceCode && this.hover.ice === iceCode;
+            var isHover = matchesRow || matchesCol
+            return {
+                '--hover': isHover,
+                '--hover-column': matchesCol,
+                '--hover-row': matchesRow,
+                '--hover-target': matchesRow && matchesCol,
+                '--frozen': this.isHoverFrozen && isHover
+            };
         },
         updateBreakCosts: function() {
             var self = this;

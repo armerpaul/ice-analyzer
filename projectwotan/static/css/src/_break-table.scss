@@ -1,13 +1,20 @@
-$cell-dimention: 80px;
-$header-dimention: 220px;
+$cell-dimention: 5em;
+$header-dimention: 15em;
 $side-padding: 1em;
+$cell-spacing: 0.5em;
+$cell-border-width: 3px;
+$cell-bg-color: mix($color-white, $color-gray-light);
+$cell-bg-color-hover: mix($color-white, $color-gray-light, 75%);
+$border-color: fade-out($color-white, 0.7);
 
 .break-table {
-    width: 100%;
-    overflow: scroll;
+    min-width: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    margin-top: $header-dimention * .75;
+    margin-bottom: $header-dimention * .75;
+    margin-left: $header-dimention * .25;
     
     &__row {
         display: flex;
@@ -17,41 +24,80 @@ $side-padding: 1em;
     }
 
     &__cell {
-        $cell-spacing: 0.3em;
+        $cc: &;
 
-        background: rgba($color-white, 0.15);
-        flex: 1 0 #{$cell-dimention};
-        height: $cell-dimention;
-        text-align: right;
-        margin-right: $cell-spacing;
-        margin-bottom: $cell-spacing;
         display: flex;
         justify-content: center;
         align-items: center;
+        height: $cell-dimention;
+        width: $cell-dimention;
+        flex: 1 0 #{$cell-dimention};
+        text-align: right;
+        margin: $cell-spacing / 2;
+        bottom: 0;
 
-        &:before, &:after {
-            opacity: 0;
-            content: '';
-            background: rgba($color-white, 0.1);
-            position: absolute;
-            z-index: -1;
-            transition: opacity $hover-time;
-        }
+        background: $cell-bg-color;
+        color: $color-indigo-dim;
+        transition-property: all;
+        transition-duration: $hover-time;
 
         &:before {
-            height: $cell-dimention;
-            width: calc(100% - #{$header-dimention});
-            left: $header-dimention;
+            content: '';
+            width: 100%;
+            height: 0;
+            background: inherit;
+            position: absolute;
         }
 
-        &:after {
-            width: $cell-dimention;
-            height: calc(100% - #{$header-dimention});
-            top: $header-dimention;
+        &.--hover {
+            background: $cell-bg-color-hover;
+            border: 1px solid transparent;
+
+            &-row {
+                margin-left: -$cell-spacing / 2;
+                margin-right: -$cell-spacing / 2;
+                flex: 1 0 #{$cell-dimention + 2 * $cell-spacing};
+                border-right: none !important;
+                border-left: none !important;
+
+                &.--header {
+                    left: $cell-spacing;
+                    margin-left: 0;
+                    margin-right: $cell-spacing;
+                }
+            }
+
+            &-column {
+                height: $cell-dimention + 2 * $cell-spacing;
+                margin-top: -$cell-spacing / 2;
+                margin-bottom: -$cell-spacing / 2;
+                border-top: none !important;
+                border-bottom: none !important;
+
+                &.--header {
+                    bottom: $cell-spacing;
+                }
+            }
+
+            &-target {
+                border-radius: $cell-spacing;
+                z-index: 1;
+            }
+
+            #{$cc}__arc-container {
+                width: $cell-dimention;
+                margin-right: 0;
+            }
+        }
+
+
+
+        &.--frozen {
+            background: lighten($color-seafoam, 59%);
+            border-color: fade-out($color-seafoam, 0.75);
         }
 
         &.--form {
-            height: $header-dimention;
         }
 
         &.--header {
@@ -60,20 +106,24 @@ $side-padding: 1em;
             justify-content: flex-end;
             align-items: flex-end;
             background: transparent;
+            border: none;
+            position: relative;
 
             &:first-child {
                 flex: 1 0 #{$header-dimention};
             }
-
-            &:not(:first-child) {
-                height: $header-dimention;
-            }
         }
 
-        &:hover:not(.--header) {
-            &:before, &:after {
-                opacity: 1;
-            }
+        &__arc-container {
+            width: $cell-dimention - 2 * $cell-spacing;
+            margin-right: $cell-spacing;
+
+            transition-property: margin-right, width;
+            transition-duration: $hover-time;
+        }
+
+        &__arc {
+            fill: $color-indigo-dim;
         }
     }
 }
@@ -81,37 +131,41 @@ $side-padding: 1em;
 .card {
     $c: &;
 
+    $thumbnail-dimention: $cell-dimention * .7071;
+    $card-padding: 12px;
+
+    display: flex;
+    height: $thumbnail-dimention;
+    flex-direction: row;
+    width: $header-dimention;
     position: relative;
-    display: inline-block;
+    align-items: flex-start;
 
     &__remove {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1;
         font-size: 1.25em;
-        background: rgba($color-purple-dim, 0.8);
-        padding: 0.4em;
         line-height: 0.5;
         cursor: pointer;
-        opacity: 0;
-        transition: opacity $hover-time;
+        opacity: 0.5;
+        background: $color-indigo-dim;
+        color: white;
+        z-index: -1;
+        top: 0;
+        position: absolute;
+        transition-property: transform;
+        transition-duration: $hover-time * 2;
 
-        #{$c}:hover & {
+        &:hover {
             opacity: 0.75;
-        }
-
-        #{$c}:hover &:hover {
-            opacity: 1;
         }
     }
 
     &__image {
-        width: $cell-dimention;
-        height: $cell-dimention;
+        $card-img-border-radius: 2 * $cell-border-width;
+
+        height: $thumbnail-dimention;
+        flex: 0 0 $thumbnail-dimention;
         overflow: hidden;
         position: relative;
-        background: rgba($color-white, 0.4);
 
         img {
             position: absolute;
@@ -119,35 +173,81 @@ $side-padding: 1em;
     }
 
     &__name {
-        position: absolute;
-        width: $header-dimention - $cell-dimention;
-        transform: rotate(-15deg);
-        right: 120%;
-        top: 60%; 
+        font-size: 1.15em;
+    }
+
+    &__info {
+        text-align: left;
+        padding: 0.5em;
+        flex: 0 1 100%;
+        background: $cell-bg-color;
+        transition-property: background;
+        transition-duration: $hover-time;
     }
 
     &.ice {
-        transform: rotateZ(90deg);
+        flex-direction: row-reverse;
+        align-self: center;
 
         img {
-            width: 150%;
-            left: -30%;
-            top: -110%;
+            transform: rotateZ(90deg);
+            width: 180%;
+            left: 25%;
+            top: -80%;
+        }
+
+        #{$c}__remove {
+            padding: 0.3em 0.5em 0.5em 0.3em;
+            border-bottom-right-radius: 100%;
+            left: 0;
+            transform-origin: top left;
         }
     }
 
-    &.breaker {
+    &.breaker {   
+        position: absolute;
+        bottom: 0;
+        transform-origin: bottom left;
+        transform: rotate(-45deg);
+        left: 100%;
+
         img {
-            width: 174%;
-            left: -43%;
-            top: -28%;
+            width: 190%;
+            left: -50%;
+            top: -33%;
         }
 
-        &.old-layout {
+        &.--old-layout {
             img {
-                width: 197%;
-                left: -70%;
-                top: -12%;
+                width: 210%;
+                left: -77%;
+                top: -21%;
+                transform: rotate(10deg);         
+            }
+        }
+
+        #{$c}__remove {
+            padding: 0.3em 0.3em 0.5em 0.5em;
+            border-bottom-left-radius: 100%;
+            right: 0;
+            transform-origin: top right;
+        }
+    }
+
+    .--hover & {
+        #{$c}__info {
+            background: $cell-bg-color-hover;
+        }
+
+        &.ice {
+            #{$c}__remove {
+                transform: rotate(90deg);
+            }
+        }
+
+        &.breaker {
+            #{$c}__remove {
+                transform: rotate(-90deg);
             }
         }
     }

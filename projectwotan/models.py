@@ -143,6 +143,7 @@ class Ice(Card):
         TRACE_PATTERN = '<trace>trace ([X\d])</trace>'
         ETR_PATTERN = '[Ee]nd the run'
         ETR_UNLESS_COST_PATTERN = 'End the run unless the Runner pays (\d)[credit]'
+        ETR_IF_TAGGED = 'End the run if the Runner is tagged'
 
         def __init__(self, line):
             self.text = line.replace(self.PREFIX, '').strip()
@@ -165,6 +166,23 @@ class Ice(Card):
             match = re.search(self.ETR_UNLESS_COST_PATTERN, self.text)
             return match.group(1) if match else None
 
+        def applies_to_runner(self, runner):
+            if not runner.get('tagged', False) and self.ETR_IF_TAGGED in self.text:
+                return False
+
+            return True
+
+        def as_json(self):
+            data = {
+                'text': self.text,
+                'etr': self.can_end_the_run
+            }
+
+            if self.is_trace:
+                data['trace'] = self.trace_strength
+
+            return data
+
         @classmethod
         def is_subroutine(cls, line):
             return cls.PREFIX in line
@@ -183,3 +201,10 @@ class Ice(Card):
                 subroutines.append(self.Subroutine(line))
 
         return subroutines
+
+    def as_json(self):
+        data = super().as_json()
+
+        data['subroutines'] = [s.as_json() for s in self.subroutines]
+
+        return data
