@@ -1,4 +1,4 @@
-$cell-dimention: 5em;
+$cell-dimention: 4.5em;
 $header-dimention: 15em;
 $side-padding: 1em;
 $cell-spacing: 0.5em;
@@ -41,14 +41,6 @@ $border-color: fade-out($color-white, 0.7);
         transition-property: all;
         transition-duration: $hover-time;
 
-        &:before {
-            content: '';
-            width: 100%;
-            height: 0;
-            background: inherit;
-            position: absolute;
-        }
-
         &.--hover {
             background: $cell-bg-color-hover;
             border: 1px solid transparent;
@@ -61,8 +53,7 @@ $border-color: fade-out($color-white, 0.7);
                 border-left: none !important;
 
                 &.--header {
-                    left: $cell-spacing;
-                    margin-left: 0;
+                    margin-left: $cell-spacing / 2;
                     margin-right: $cell-spacing;
                 }
             }
@@ -82,6 +73,7 @@ $border-color: fade-out($color-white, 0.7);
             &-target {
                 border-radius: $cell-spacing;
                 z-index: 1;
+                flex: 1 0 #{$cell-dimention + $cell-spacing};
             }
 
             #{$cc}__arc-container {
@@ -131,39 +123,21 @@ $border-color: fade-out($color-white, 0.7);
 .card {
     $c: &;
 
-    $thumbnail-dimention: $cell-dimention * .7071;
     $card-padding: 12px;
+    $angle-ratio: 0.7071;
 
     display: flex;
-    height: $thumbnail-dimention;
+    height: $cell-dimention;
     flex-direction: row;
     width: $header-dimention;
     position: relative;
-    align-items: flex-start;
-
-    &__remove {
-        font-size: 1.25em;
-        line-height: 0.5;
-        cursor: pointer;
-        opacity: 0.5;
-        background: $color-indigo-dim;
-        color: white;
-        z-index: -1;
-        top: 0;
-        position: absolute;
-        transition-property: transform;
-        transition-duration: $hover-time * 2;
-
-        &:hover {
-            opacity: 0.75;
-        }
-    }
+    align-items: flex-end;
 
     &__image {
         $card-img-border-radius: 2 * $cell-border-width;
 
-        height: $thumbnail-dimention;
-        flex: 0 0 $thumbnail-dimention;
+        height: $cell-dimention;
+        flex: 0 0 $cell-dimention;
         overflow: hidden;
         position: relative;
 
@@ -172,17 +146,53 @@ $border-color: fade-out($color-white, 0.7);
         }
     }
 
+    &__arc-container {
+        width: $cell-dimention;
+        height: $cell-dimention;
+        bottom: 100%;
+        position: absolute;
+    }
+
     &__name {
         font-size: 1.15em;
     }
 
     &__info {
+        $c_info: &;
+
         text-align: left;
         padding: 0.5em;
         flex: 0 1 100%;
         background: $cell-bg-color;
         transition-property: background;
         transition-duration: $hover-time;
+
+        &__remove {
+            font-size: 1.25em;
+            line-height: 0.5;
+            cursor: pointer;
+            background: $color-indigo-dim;
+            color: white;
+            top: 0;
+            opacity: 0;
+            position: absolute;
+            transition-property: opacity;
+            transition-duration: $hover-time * 2;
+            padding: 0.3em 0.3em 0.5em 0.5em;
+            border-bottom-left-radius: 100%;
+            right: 0;
+            transform-origin: top right;
+
+            &:hover {
+                opacity: 0.75;
+            }
+        }
+
+        &:hover {
+            #{$c_info}__remove {
+                opacity: 0.5;
+            }
+        }
     }
 
     &.ice {
@@ -196,20 +206,18 @@ $border-color: fade-out($color-white, 0.7);
             top: -80%;
         }
 
-        #{$c}__remove {
-            padding: 0.3em 0.5em 0.5em 0.3em;
-            border-bottom-right-radius: 100%;
-            left: 0;
-            transform-origin: top left;
+        #{$c}__info {
+            height: $cell-dimention;
+            position: relative;
         }
     }
 
     &.breaker {   
-        position: absolute;
-        bottom: 0;
         transform-origin: bottom left;
-        transform: rotate(-45deg);
-        left: 100%;
+
+        #{$c}__image {
+            border-top-right-radius: $cell-dimention - $cell-dimention * $angle-ratio;
+        }
 
         img {
             width: 190%;
@@ -221,34 +229,29 @@ $border-color: fade-out($color-white, 0.7);
             img {
                 width: 210%;
                 left: -77%;
-                top: -21%;
+                top: -22%;
                 transform: rotate(10deg);         
             }
         }
 
+        #{$c}__info {
+            position: absolute;
+            height: $cell-dimention * $angle-ratio;
+            transform: rotate(-45deg);
+            width: 10em;
+            transform-origin: bottom left;
+            bottom: 100%;
+            left: 100% * $angle-ratio;
+        }
+
         #{$c}__remove {
-            padding: 0.3em 0.3em 0.5em 0.5em;
-            border-bottom-left-radius: 100%;
-            right: 0;
-            transform-origin: top right;
+
         }
     }
 
     .--hover & {
         #{$c}__info {
             background: $cell-bg-color-hover;
-        }
-
-        &.ice {
-            #{$c}__remove {
-                transform: rotate(90deg);
-            }
-        }
-
-        &.breaker {
-            #{$c}__remove {
-                transform: rotate(-90deg);
-            }
         }
     }
 }

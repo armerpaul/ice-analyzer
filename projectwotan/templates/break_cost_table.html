@@ -15,9 +15,9 @@
       </mask>
       <symbol id="eighth-of-circle">
         <path d="
-          M100 100
-          L29.29 100
-          C29.29 100 29.29 70.71 50 50
+          M70.71 100
+          L0 100
+          C0 100 0 70.71 20.71 50
           z
         "></path>
       </symbol>
@@ -26,9 +26,15 @@
 
   <script id="ia-card" type="text/html">
     <div class="card" v-bind:class="cssClasses" v-if="card">
-      
       <div class="card__image"><img v-bind:src="card.image" /></div>
+      <svg v-if="top"
+        class="card__arc-container" viewBox="0 0 100 100"
+      >
+        <use class="card__arc" xlink:href="#eighth-of-circle"/>
+      </svg>
       <div class="card__info">
+          <a class="card__info__remove" v-on:click="remove(card)">&times;</a>
+
           <div class="card__name">[[ card.name ]]</div>
           <span v-for="stat in stats"
             v-bind:class="stat.cssClass" 
@@ -36,7 +42,6 @@
             [[ stat.value ]]
           </span>
       </div>
-      <a class="card__remove" v-on:click="remove(card)">&times;</a>
     </div>
   </script>
 
@@ -59,12 +64,9 @@
           v-bind:class="cellCssClasses(iceCode, 0)"
           v-on:click="toggleHoverFreeze()"
         >
-          <svg class="break-table__cell__arc-container" viewBox="0 0 100 100">
-            <use class="break-table__cell__arc" xlink:href="#eighth-of-circle"/>
-          </svg>
           <ia-card 
             v-bind:card="cards[iceCode]" 
-            v-bind:index="index"
+            v-bind:top="true"
             v-bind:remove="removeCard"
           ></ia-card>
         </div>

@@ -2,7 +2,7 @@ var STATUS_LOADING = 'loading';
 var MIN_QUERY_LENGTH = 3;
 
 VueComponent('ia-card', {
-    props: ['card', 'index', 'remove'],
+    props: ['card', 'top', 'remove'],
     computed: {
         cssClasses: function() {
             var cssClasses = [ this.card.type ];
